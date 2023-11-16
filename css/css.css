@@ -6,9 +6,6 @@
 --dim-gray: #666370ff;
 --space-cadet: #1c1f33ff;
 }
-* {
-    box-sizing: border-box
-} 
 body {
     padding: 30px;
     height: auto;
