@@ -1,8 +1,68 @@
-html {
-    padding: 40px;
+
+:root {
+--scarlet: #ff220cff;
+--poppy: #d33e43ff;
+--cinereous: #9b7874ff;
+--dim-gray: #666370ff;
+--space-cadet: #1c1f33ff;
 }
+* {
+    box-sizing: border-box
+} 
 body {
     padding: 30px;
-    border-style: double;
     height: auto;
+}
+div.NameHeading {
+    text-align: center;
+    z-index:2;
+    /* color: var(--space-cadet); */
+    position: relative;
+    font-family:Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+div.split {
+    height:100% ;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+.left {
+    width: 20%;
+    left: 0;
+    background-color:var(--scarlet);
+  }
+.middle {
+    width: 30%;
+    left: 20%;
+    background-color:var(--dim-gray);
+  }
+  
+.right {
+    width: 50%;
+    right: 0;
+    background-color: var(--space-cadet);
+  }
+ #educationButton, #aboutMeButton, #workExperienceButton {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: transparent;
+}
+.left:hover {
+    background-color: var(--poppy);
+}
+.right:hover{
+    background-color: var(--dim-gray);
+
+}
+#contact {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding-right: 1%;
 }
