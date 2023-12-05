@@ -126,8 +126,30 @@ createEmptyArray();
 introduceNewNumber();
 introduceNewNumber();
 displayInBox();
- document.addEventListener('keyup',readKey);
-
+document.addEventListener('keyup',readKey);
+document.addEventListener('touchstart', function (e) {
+    startX = e.changedTouches[0].screenX;
+    startY = e.changedTouches[0].screenY;
+}, false);
+document.addEventListener('touchend', function (e) {
+    endX = e.changedTouches[0].screenX;
+    endY = e.changedTouches[0].screenY;
+    deltaX = endX - startX;
+    deltaY = endY - startY;
+    if (Math.abs(deltaX) >= Math.abs(deltaY)) {
+        if (deltaX > 0) {
+            readKey({keyCode: 39} );
+        } else if(deltaX < 0) {
+            readKey({keyCode: 37});
+        } else {}
+    } else {
+        if (deltaY > 0) {
+            readKey({keyCode: 40});
+        } else {
+            readKey({keyCode: 38});
+        }
+    }
+})
 
 function keyUp() {
     let gameArrayTranspose = transposeArray(gameArray,gridWidth);
