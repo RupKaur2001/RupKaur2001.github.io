@@ -1,0 +1,49 @@
+body {
+    background-color: #cdc1b4;
+}
+#score-area {
+    height: 10vh;
+    font-size: xx-large;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    color: #726962;
+
+}
+#game-area {
+    /* background-color: #dcaa64; */
+    border-radius: 2%;
+    height: 80vh;
+    aspect-ratio: 1;
+    padding: 0.5%;
+    display: block;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+#all-the-boxes {
+    background-color: #867b72;
+    align-items: center;
+    justify-content: center;
+    padding: 1%;
+    border-radius: 2%;
+    height: 100%;
+    aspect-ratio: 1;
+    
+}
+.game-box {
+    width: 23%;
+    aspect-ratio: 1;
+    background-color: #b8aa9d;
+    border-radius: 5%;
+    float: left;
+    margin: 1%;
+    
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: xx-large;
+    color: #726962;
+}
