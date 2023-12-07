@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () =>{
 const gridWidth = 4;
-rows = gridWidth;
-columns = gridWidth;
+let rows = gridWidth;
+let columns = gridWidth;
 var gameArray = [];
 
 function printCurrArray () {
@@ -35,7 +35,7 @@ function introduceNewNumber () {
     let zeroIndexArray = currentZeros();
     let numZeros = zeroIndexArray.length;
     // Choose a random Index out of these indices
-    randIndex = Math.floor(Math.random() * numZeros);
+    let randIndex = Math.floor(Math.random() * numZeros);
     // console.log(randIndex);
     let oneDIndex = zeroIndexArray[randIndex]; 
     // console.log(oneDIndex);
@@ -57,23 +57,23 @@ function createEmptyArray() {
 function readKey(e) {
     // USE WASD or Arrow keys <3
     if((e.keyCode === 37) || (e.keyCode === 65)) {
-        keyLeft();       
-        if (currentZeros().length != 0) {
+        didSomethingChange = keyLeft();       
+        if (currentZeros().length != 0 && didSomethingChange) {
             introduceNewNumber();
         }
     } else if ((e.keyCode === 38) || (e.keyCode === 87)) {
-        keyUp();
-        if (currentZeros().length != 0) {
+        didSomethingChange = keyUp();
+        if (currentZeros().length != 0 && didSomethingChange) {
             introduceNewNumber();
         }
     } else if ((e.keyCode === 39) || (e.keyCode === 68)) {
-        keyRight();
-        if (currentZeros().length != 0) {
+        didSomethingChange = keyRight();
+        if (currentZeros().length != 0 && didSomethingChange) {
             introduceNewNumber();
         }
     } else if ((e.keyCode === 40) || (e.keyCode === 83 )) {
-        keyDown();
-        if (currentZeros().length != 0) {
+        didSomethingChange = keyDown();
+        if (currentZeros().length != 0 && didSomethingChange) {
             introduceNewNumber();
         }
     }
@@ -141,7 +141,9 @@ document.addEventListener('touchend', function (e) {
             readKey({keyCode: 39} );
         } else if(deltaX < 0) {
             readKey({keyCode: 37});
-        } else {}
+        } else {
+            // do nothing
+        }
     } else {
         if (deltaY > 0) {
             readKey({keyCode: 40});
@@ -153,31 +155,34 @@ document.addEventListener('touchend', function (e) {
 
 function keyUp() {
     let gameArrayTranspose = transposeArray(gameArray,gridWidth);
-    gameArrayTranspose = leftise(gameArrayTranspose);
-    gameArray = transposeArray(gameArrayTranspose,gridWidth);
+    var newGameArrayTranspose = leftise(gameArrayTranspose);
+    gameArray = transposeArray(newGameArrayTranspose.newArr,gridWidth);
+    return newGameArrayTranspose.didSomethingChange;
 }
 
 function keyLeft () {
-    gameArray = leftise(gameArray);
+    var newGameArray = leftise(gameArray);
+    gameArray = newGameArray.newArr;
+    return newGameArray.didSomethingChange;
 }
 
 function keyDown() {
     let gameArrayTranspose = transposeArray(gameArray,gridWidth);
-    gameArrayTranspose = rightise(gameArrayTranspose);
-    gameArray = transposeArray(gameArrayTranspose,gridWidth);
+    var newGameArrayTranspose = rightise(gameArrayTranspose);
+    gameArray = transposeArray(newGameArrayTranspose.newArr,gridWidth);
+    return newGameArrayTranspose.didSomethingChange;
 }
 
 function keyRight () {
-    gameArray=rightise(gameArray);
+    var newGameArray=rightise(gameArray);
+    gameArray = newGameArray.newArr;
+    return newGameArray.didSomethingChange;
 }
 
 function leftise(arr) {
+    let didSomethingChange = false;
     for (let i = 0; i < rows; i++) {
         let newRow = arr[i].filter(item => item !== 0);
-        // console.log(newRow.length);
-        // for(let newRoIn = 0; newRoIn < newRow.length;newRoIn++) {
-        //     console.log(newRow[newRoIn]);
-        // }
         for (let j = 0; j < newRow.length-1; j++) {
             if(newRow[j] == newRow[j+1]) {
                 newRow[j]  *= 2;
@@ -186,21 +191,21 @@ function leftise(arr) {
             }
         }
         newRow = newRow.filter(item => item !== 0);
-        console.log(newRow.length);
-        for(let newRoIn = 0; newRoIn < newRow.length;newRoIn++) {
-            console.log(newRow[newRoIn]);
-        }
         for (let gi = 0; gi < gridWidth; gi++) {
             if (gi<newRow.length) {
-                arr[i][gi] = newRow[gi];
+                if (arr[i][gi] != newRow[gi]) { 
+                    arr[i][gi] = newRow[gi];
+                    didSomethingChange = true;
+                }
             } else {
                 arr[i][gi] = 0;
             }
         }
     }
-    return arr;
+    return {newArr: arr, didSomethingChange: didSomethingChange};
 }
 function rightise(arr) {
+    let didSomethingChange = false;
     for (let i = 0; i < rows; i++) {
         let newRow = arr[i].filter(item => item !== 0);
         for (let j = newRow.length-1; j > 0 ; j--) {
@@ -211,18 +216,17 @@ function rightise(arr) {
             }
         }
         newRow = newRow.filter(item => item !== 0);
-        console.log(newRow.length);
-        for(let newRoIn = 0; newRoIn < newRow.length;newRoIn++) {
-            console.log(newRow[newRoIn]);
-        }
         for (let gi = 0; gi < gridWidth; gi++) {
             if (gi>=(gridWidth-newRow.length)) {
-                arr[i][gi] = newRow[gi-(gridWidth-newRow.length)];
+                if (arr[i][gi] != newRow[gi-(gridWidth-newRow.length)]) {
+                    arr[i][gi] = newRow[gi-(gridWidth-newRow.length)];
+                    didSomethingChange = true;
+                }
             } else {
                 arr[i][gi] = 0;
             }
         }
     }
-    return arr;
+    return {newArr: arr, didSomethingChange: didSomethingChange};
 }
 })
