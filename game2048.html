@@ -11,6 +11,33 @@
     <title>2048 Game on Web</title>
 </head>
 <body>
+    <div id="start-screen">
+        <h1>
+        Hi! This is 2048. Aim to generate 2048 <br>
+        by combining powers of 2. <br>
+        Use WASD or arrow keys with keyboard. <br>
+        Use swipe gesture for touchscreens. <br>
+        
+        </h1>
+        <br>
+        <div id = "start-screen-button">
+            <button class="button-4" onclick="removeStartScreen()"> Start the game</button>
+
+        </div>
+    </div>
+    <div id="end-screen">
+        <h1>
+                               Hi! <br>
+        Use WASD or arrow keys with keyboard. <br>
+        Use swipe gesture for touchscreens. <br>
+        
+        </h1>
+        <br>
+        <div id = "end-screen-button">
+            <button onclick="restartTheGame()"> Click Me</button>
+
+        </div>
+    </div>
     <div id="score-area">
         2048
         <!-- Current Score -->

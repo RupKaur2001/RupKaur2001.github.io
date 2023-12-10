@@ -1,3 +1,8 @@
+
+function removeStartScreen() {
+    document.getElementById("start-screen").style.display = "none";
+}
+
 document.addEventListener('DOMContentLoaded', () =>{
 const gridWidth = 4;
 let rows = gridWidth;
