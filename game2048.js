@@ -43,61 +43,79 @@ function undoCommand() {
     displayInBox();
 }
 // function
+
+function printCurrArray () {
+    // Only for debug purposes
+    // No functional use
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < columns; j++) {
+            console.log(gameArray[i][j]);
+        }
+    }   
+};
+
+function currentZeros() {
+    // Create array of current zero boxes
+    // And number of zeros
+    let numZeros = 0;
+    let zeroIndexArray= [];
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < columns; j++) {
+            if (gameArray[i][j] == 0) {
+                numZeros++;
+                zeroIndexArray.push(gridWidth*i +j);
+            }
+        }
+    }
+    return zeroIndexArray;
+}
+
+function introduceNewNumber () {
+    // Adds a box, should be triggered
+    // 1. At start of game - twice
+    // 2. After every swipe
+    let zeroIndexArray = currentZeros();
+    let numZeros = zeroIndexArray.length;
+    // Choose a random Index out of these indices
+    let randIndex = Math.floor(Math.random() * numZeros);
+    let oneDIndex = zeroIndexArray[randIndex]; 
+    gameArray[Math.floor(oneDIndex/gridWidth)][oneDIndex%gridWidth] = Math.pow(2,Math.round(Math.random())+1);
+    printCurrArray();
+};
+
+function createEmptyArray() {
+    // Create empty 4x4 array
+    for (let i = 0; i < rows; i++) {
+      gameArray[i] = [];
+      for (let j = 0; j < columns; j++) {
+        gameArray[i][j] = 0;
+      }
+    }
+    printCurrArray();
+};
+
+function transposeArray(array, arrayLength){
+    let newArray = [];
+    for(let i of array){
+        newArray.push([]);
+    };
+
+    for(let i = 0; i < array.length; i++){
+        for(let j = 0; j < arrayLength; j++){
+            newArray[j].push(array[i][j]);
+        };
+    };
+    
+    return newArray;
+};
+
 document.addEventListener('DOMContentLoaded', runGame);
 function runGame() {
-    function printCurrArray () {
-        // Only for debug purposes
-        // No functional use
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < columns; j++) {
-                console.log(gameArray[i][j]);
-            }
-        }   
-    };
-    function currentZeros() {
-        // Create array of current zero boxes
-        // And number of zeros
-        let numZeros = 0;
-        let zeroIndexArray= [];
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < columns; j++) {
-                if (gameArray[i][j] == 0) {
-                    numZeros++;
-                    zeroIndexArray.push(gridWidth*i +j);
-                }
-            }
-        }
-        return zeroIndexArray;
-    }
-    function introduceNewNumber () {
-        // Adds a box, should be triggered
-        // 1. At start of game - twice
-        // 2. After every swipe
-        let zeroIndexArray = currentZeros();
-        let numZeros = zeroIndexArray.length;
-        // Choose a random Index out of these indices
-        let randIndex = Math.floor(Math.random() * numZeros);
-        // console.log(randIndex);
-        let oneDIndex = zeroIndexArray[randIndex]; 
-        // console.log(oneDIndex);
-        gameArray[Math.floor(oneDIndex/gridWidth)][oneDIndex%gridWidth] = Math.pow(2,Math.round(Math.random())+1);
-        printCurrArray();
-    };
-    function createEmptyArray() {
-        // Create empty 4x4 array
-
-        for (let i = 0; i < rows; i++) {
-          gameArray[i] = [];
-          for (let j = 0; j < columns; j++) {
-            gameArray[i][j] = 0;
-          }
-        }
-        printCurrArray();
-    };
     
     function readKey(e) {
         // USE WASD or Arrow keys <3
         let oldArrTemp = gameArray;
+        let didSomethingChange = false;
         if((e.keyCode === 37) || (e.keyCode === 65)) {
             didSomethingChange = keyLeft();       
             if (currentZeros().length != 0 && didSomethingChange) {
@@ -125,21 +143,9 @@ function runGame() {
         }
         displayInBox();
     };
-    function transposeArray(array, arrayLength){
-        var newArray = [];
-        for(var i = 0; i < array.length; i++){
-            newArray.push([]);
-        };
-
-        for(var i = 0; i < array.length; i++){
-            for(var j = 0; j < arrayLength; j++){
-                newArray[j].push(array[i][j]);
-            };
-        };
-
-        return newArray;
-    }
-
+    
+    let startX;
+    let startY;
     createEmptyArray();
     introduceNewNumber();
     introduceNewNumber();
@@ -150,10 +156,10 @@ function runGame() {
         startY = e.changedTouches[0].screenY;
     }, false);
     document.addEventListener('touchend', function (e) {
-        endX = e.changedTouches[0].screenX;
-        endY = e.changedTouches[0].screenY;
-        deltaX = endX - startX;
-        deltaY = endY - startY;
+        let endX = e.changedTouches[0].screenX;
+        let endY = e.changedTouches[0].screenY;
+        let deltaX = endX - startX;
+        let deltaY = endY - startY;
         if (Math.abs(deltaX) >= Math.abs(deltaY)) {
             if (deltaX > 0) {
                 readKey({keyCode: 39} );
@@ -173,26 +179,26 @@ function runGame() {
 
     function keyUp() {
         let gameArrayTranspose = transposeArray(gameArray,gridWidth);
-        var newGameArrayTranspose = leftise(gameArrayTranspose);
+        let newGameArrayTranspose = leftise(gameArrayTranspose);
         gameArray = transposeArray(newGameArrayTranspose.newArr,gridWidth);
         return newGameArrayTranspose.didSomethingChange;
     }
 
     function keyLeft () {
-        var newGameArray = leftise(gameArray);
+        let newGameArray = leftise(gameArray);
         gameArray = newGameArray.newArr;
         return newGameArray.didSomethingChange;
     }
 
     function keyDown() {
         let gameArrayTranspose = transposeArray(gameArray,gridWidth);
-        var newGameArrayTranspose = rightise(gameArrayTranspose);
+        let newGameArrayTranspose = rightise(gameArrayTranspose);
         gameArray = transposeArray(newGameArrayTranspose.newArr,gridWidth);
         return newGameArrayTranspose.didSomethingChange;
     }
 
     function keyRight () {
-        var newGameArray=rightise(gameArray);
+        let newGameArray=rightise(gameArray);
         gameArray = newGameArray.newArr;
         return newGameArray.didSomethingChange;
     }
@@ -229,8 +235,8 @@ function runGame() {
             for (let j = newRow.length-1; j > 0 ; j--) {
                 if(newRow[j] == newRow[j-1]) {
                     newRow[j]  *= 2;
-                    newRow[j-1] = 0;
                     j--;
+                    newRow[j]   = 0;
                 }
             }
             newRow = newRow.filter(item => item !== 0);
